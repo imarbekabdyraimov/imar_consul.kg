@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Консульская служба Кыргызской Республики</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Google Maps API — замените YOUR_API_KEY на ваш ключ из console.cloud.google.com -->
+<script>
+  window.GMAPS_KEY = 'YOUR_API_KEY';
+</script>
+<style>
+:root {
+  --navy:   #0D1F3C;
+  --navy2:  #162B52;
+  --gold:   #C59A2A;
+  --gold2:  #E8B84B;
+  --red:    #CC2929;
+  --white:  #FFFFFF;
+  --offwhite: #F4F6FA;
+  --text:   #1A1A2E;
+  --muted:  #6B7A99;
+  --border: #DDE3F0;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(13,31,60,0.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  color: var(--text);
+  background: var(--offwhite);
+  font-size: 16px;
+  line-height: 1.6;
+}
+a { color: inherit; text-decoration: none; }
+h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+
+/* ─── ALERT BANNER ─────────────────────────────────────────────────── */
+.alert-banner {
+  background: var(--red);
+  color: white;
+  text-align: center;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer;
+}
+.alert-banner .dot { width:8px;height:8px;background:#FFD;border-radius:50%;animation:blink 1.2s ease-in-out infinite; flex-shrink:0; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ─── HEADER ────────────────────────────────────────────────────────── */
+header {
+  background: var(--navy);
+  color: white;
+  position: sticky; top: 0; z-index: 999;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.header-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; height: 72px;
+}
+.logo { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.logo-emblem {
+  width: 48px; height: 48px; background: var(--gold);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.logo-text { line-height: 1.2; }
+.logo-text strong { display: block; font-family: 'Playfair Display',serif; font-size: 15px; letter-spacing: 0.3px; }
+.logo-text span { font-size: 11px; color: #9AABCC; letter-spacing: 0.6px; text-transform: uppercase; }
+
+nav { display: flex; gap: 4px; }
+nav a {
+  color: #BAC8E0; font-size: 13.5px; font-weight: 600;
+  padding: 8px 14px; border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+nav a:hover { background: rgba(255,255,255,0.08); color: white; }
+nav a.active { color: var(--gold2); }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.lang-switcher { display: flex; gap: 4px; }
+.lang-switcher button {
+  background: none; border: 1px solid rgba(255,255,255,0.15);
+  color: #9AABCC; padding: 4px 9px; border-radius: 6px;
+  font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.lang-switcher button.active,
+.lang-switcher button:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+
+.btn-emergency {
+  background: var(--red); color: white; border: none;
+  padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 7px;
+  animation: pulse-red 2s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+.btn-emergency:hover { transform: scale(1.03); }
+@keyframes pulse-red {
+  0%,100% { box-shadow: 0 0 0 0 rgba(204,41,41,0.5); }
+  50%      { box-shadow: 0 0 0 8px rgba(204,41,41,0); }
+}
+
+/* Mobile menu button */
+.menu-toggle {
+  display: none; background: none; border: none; color: white;
+  font-size: 22px; cursor: pointer; padding: 6px;
+}
+.mobile-nav {
+  display: none; flex-direction: column; background: var(--navy2);
+  padding: 12px 20px 16px; gap: 4px;
+}
+.mobile-nav a {
+  color: #BAC8E0; font-size: 14px; font-weight: 600;
+  padding: 10px 14px; border-radius: 8px; display: block;
+  transition: background 0.2s, color 0.2s;
+}
+.mobile-nav a:hover { background: rgba(255,255,255,0.08); color: white; }
+.mobile-nav.open { display: flex; }
+
+/* ─── HERO ──────────────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #1E3A6E 100%);
+  color: white; padding: 70px 28px 50px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-content { max-width: 1280px; margin: 0 auto; position: relative; }
+.hero h1 {
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: var(--gold2); }
+.hero p { color: #9AABCC; font-size: 16px; margin-bottom: 36px; max-width: 520px; }
+
+.search-bar {
+  display: flex; gap: 0; max-width: 580px;
+  background: white; border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.search-bar input {
+  flex: 1; border: none; padding: 16px 20px; font-size: 15px;
+  font-family: inherit; color: var(--text); outline: none;
+}
+.search-bar button {
+  background: var(--gold); border: none; padding: 16px 24px;
+  color: var(--navy); font-weight: 700; font-size: 14px;
+  cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 8px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.search-bar button:hover { background: var(--gold2); }
+
+.hero-stats {
+  display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat strong { display: block; font-size: 28px; font-family: 'Playfair Display',serif; color: var(--gold2); }
+.hero-stat span { font-size: 12px; color: #7A8FAF; text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* ─── SECTION WRAPPER ───────────────────────────────────────────────── */
+.section { padding: 64px 28px; }
+.section-inner { max-width: 1280px; margin: 0 auto; }
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.section-title { font-size: clamp(22px, 3vw, 34px); color: var(--navy); margin-bottom: 8px; }
+.section-sub { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+
+/* ─── SERVICES ──────────────────────────────────────────────────────── */
+.section-services { background: white; }
+.services-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 20px;
+}
+.service-card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px 22px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative; overflow: hidden;
+}
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s;
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--gold); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon { font-size: 32px; margin-bottom: 14px; }
+.service-card h3 { font-family: 'Nunito Sans',sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.service-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.service-card .arrow { color: var(--gold); font-size: 18px; margin-top: 12px; display: block; }
+
+/* ─── MAP SECTION ───────────────────────────────────────────────────── */
+.section-map { background: var(--offwhite); }
+.map-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+#map {
+  height: 480px; border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  z-index: 1; overflow: hidden; position: relative;
+}
+.map-api-banner {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: rgba(13,31,60,0.93); color: white;
+  padding: 10px 16px; font-size: 12px; z-index: 10;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.map-api-banner a { color: var(--gold2); font-weight: 700; }
+.map-api-banner input {
+  flex: 1; min-width: 200px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1); color: white; border-radius: 6px;
+  padding: 5px 10px; font-size: 12px; font-family: inherit; outline: none;
+}
+.map-api-banner button {
+  background: var(--gold); color: var(--navy); border: none;
+  border-radius: 6px; padding: 5px 12px; font-size: 12px;
+  font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.gm-style .gm-style-iw-c { border-radius: 10px !important; padding: 4px !important; }
+.gm-popup { font-family: 'Nunito Sans', sans-serif; min-width: 200px; }
+.gm-popup strong { display: block; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+.gm-popup .gm-addr { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.gm-popup .gm-phone { font-size: 12px; color: var(--gold); font-weight: 700; }
+.gm-popup .gm-hours { font-size: 11px; color: #4caf7d; margin-top: 4px; }
+.gm-popup .gm-dir {
+  display: inline-block; margin-top: 8px; background: var(--navy);
+  color: white; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+}
+.embassy-list { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
+.embassy-list::-webkit-scrollbar { width: 5px; }
+.embassy-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.embassy-card {
+  background: white; border-radius: var(--radius); padding: 16px 18px;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.embassy-card:hover, .embassy-card.active { border-color: var(--gold); box-shadow: 0 2px 12px rgba(197,154,42,0.15); }
+.embassy-card .ec-flag { font-size: 20px; margin-bottom: 6px; }
+.embassy-card h4 { font-family: 'Nunito Sans',sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); }
+.embassy-card p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.embassy-card .ec-phone { font-size: 12px; color: var(--gold); font-weight: 600; margin-top: 6px; display: block; }
+.embassy-card .ec-hours { font-size: 11px; color: #4caf7d; margin-top: 2px; }
+
+/* ─── TABS (Citizens / Foreigners) ─────────────────────────────────── */
+.section-info { background: white; }
+.tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 36px; overflow-x: auto; }
+.tab-btn {
+  background: none; border: none; padding: 14px 28px; font-family: inherit;
+  font-size: 15px; font-weight: 700; color: var(--muted); cursor: pointer;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s; white-space: nowrap;
+}
+.tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.info-card {
+  background: var(--offwhite); border-radius: var(--radius); padding: 24px;
+  border: 1px solid var(--border); transition: box-shadow 0.2s;
+}
+.info-card:hover { box-shadow: var(--shadow); }
+.info-card .ic-icon { font-size: 28px; margin-bottom: 12px; }
+.info-card h4 { font-family: 'Nunito Sans',sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.info-card p { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.info-card .btn-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px; font-size: 13px; font-weight: 700; color: var(--gold);
+  transition: gap 0.2s;
+}
+.info-card .btn-link:hover { gap: 10px; }
+
+/* ─── PERSONAL CABINET ──────────────────────────────────────────────── */
+.section-cabinet { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); color: white; }
+.section-cabinet .section-title { color: white; }
+.section-cabinet .section-sub { color: #9AABCC; }
+.cabinet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.cabinet-panel {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius); padding: 28px;
+}
+.cabinet-panel h3 {
+  font-family: 'Nunito Sans',sans-serif; font-size: 17px; font-weight: 700;
+  color: var(--gold2); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.queue-slots { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 8px; }
+.slot {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; padding: 10px 6px; text-align: center;
+  font-size: 12px; font-weight: 600; cursor: pointer; color: white;
+  transition: background 0.2s, border-color 0.2s;
+}
+.slot:hover:not(.taken) { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.slot.taken { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+.slot.selected { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+
+.upload-zone {
+  border: 2px dashed rgba(255,255,255,0.2); border-radius: 10px;
+  padding: 30px; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-top: 8px;
+}
+.upload-zone:hover { border-color: var(--gold2); background: rgba(197,154,42,0.07); }
+.upload-zone .uz-icon { font-size: 32px; margin-bottom: 8px; }
+.upload-zone p { font-size: 13px; color: #9AABCC; }
+.upload-zone strong { color: var(--gold2); }
+#fileInput { display: none; }
+.file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.file-item {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 12px;
+  font-size: 12px; color: #BAC8E0;
+}
+.file-item button {
+  background: none; border: none; color: var(--red); cursor: pointer; font-size: 14px; padding: 0;
+}
+
+.tracker-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.tracker-step {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px 16px;
+}
+.ts-circle {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.ts-circle.done { background: #2D8A4E; }
+.ts-circle.active { background: var(--gold); animation: pulse-gold 1.5s ease-in-out infinite; }
+.ts-circle.pending { background: rgba(255,255,255,0.1); }
+@keyframes pulse-gold { 0%,100%{box-shadow:0 0 0 0 rgba(197,154,42,0.5)} 50%{box-shadow:0 0 0 8px rgba(197,154,42,0)} }
+.ts-info strong { display: block; font-size: 13px; font-weight: 700; color: white; }
+.ts-info span { font-size: 12px; color: #7A8FAF; }
+
+/* ─── FAQ ────────────────────────────────────────────────────────────── */
+.section-faq { background: var(--offwhite); }
+.faq-search {
+  display: flex; background: white; border-radius: 10px;
+  border: 1px solid var(--border); overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 32px; max-width: 520px;
+}
+.faq-search input {
+  flex:1; border: none; padding: 14px 18px; font-size: 14px; font-family: inherit; outline: none;
+}
+.faq-search button {
+  background: var(--navy); border: none; color: white; padding: 14px 20px; cursor: pointer; font-size: 16px;
+}
+.faq-list { display: flex; flex-direction: column; gap: 10px; max-width: 780px; }
+.faq-item { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--navy);
+  transition: background 0.15s;
+}
+.faq-q:hover { background: var(--offwhite); }
+.faq-q .faq-icon { font-size: 18px; transition: transform 0.25s; flex-shrink: 0; color: var(--gold); }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a { display: none; padding: 14px 22px 18px; font-size: 14px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); }
+.faq-item.open .faq-a { display: block; }
+.faq-empty { color: var(--muted); font-size: 14px; padding: 20px 0; }
+
+/* ─── NEWS ───────────────────────────────────────────────────────────── */
+.section-news { background: white; }
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.news-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; }
+.news-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.news-img { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+.news-img.c1 { background: linear-gradient(135deg, #0D1F3C, #1E3A6E); }
+.news-img.c2 { background: linear-gradient(135deg, #1a3a1a, #2d6e2d); }
+.news-img.c3 { background: linear-gradient(135deg, #3a1a1a, #6e2d2d); }
+.news-body { padding: 20px; }
+.news-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 8px; }
+.news-card h4 { font-family: 'Nunito Sans',sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.45; margin-bottom: 10px; }
+.news-card p { font-size: 13px; color: var(--muted); }
+.news-date { font-size: 12px; color: #BBBBC0; margin-top: 12px; }
+
+/* ─── CHATBOT ────────────────────────────────────────────────────────── */
+.chat-widget {
+  position: fixed; bottom: 28px; right: 28px; z-index: 1000;
+}
+.chat-btn {
+  width: 58px; height: 58px; background: var(--navy); border-radius: 50%;
+  border: 3px solid var(--gold); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; box-shadow: 0 4px 20px rgba(13,31,60,0.4);
+  transition: transform 0.2s; margin-left: auto;
+}
+.chat-btn:hover { transform: scale(1.1); }
+.chat-bubble {
+  position: absolute; bottom: 70px; right: 0; width: 320px;
+  background: white; border-radius: 16px 16px 4px 16px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18); border: 1px solid var(--border);
+  display: none; flex-direction: column; overflow: hidden;
+}
+.chat-bubble.open { display: flex; }
+.chat-head {
+  background: var(--navy); color: white; padding: 14px 18px;
+  display: flex; align-items: center; gap: 10px; justify-content: space-between;
+}
+.chat-head-left { display: flex; align-items: center; gap: 10px; }
+.chat-head .ch-avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.chat-head strong { font-size: 14px; display: block; }
+.chat-head span { font-size: 11px; color: #9AABCC; }
+.chat-head-close { background: none; border: none; color: #9AABCC; cursor: pointer; font-size: 18px; padding: 0; line-height: 1; }
+.chat-head-close:hover { color: white; }
+.chat-messages { padding: 16px; display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; }
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.msg { font-size: 13px; padding: 10px 13px; border-radius: 12px; line-height: 1.5; max-width: 88%; }
+.msg.bot { background: var(--offwhite); color: var(--text); border-radius: 4px 12px 12px 12px; }
+.msg.user { background: var(--navy); color: white; align-self: flex-end; border-radius: 12px 4px 12px 12px; }
+.chat-typing { display: flex; gap: 4px; align-items: center; padding: 10px 13px; background: var(--offwhite); border-radius: 4px 12px 12px 12px; width: fit-content; }
+.chat-typing span { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: typing 1.2s ease-in-out infinite; }
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+.chat-input-row { padding: 12px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+.chat-input-row input {
+  flex:1; border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px;
+  font-size: 13px; font-family: inherit; outline: none;
+}
+.chat-input-row input:focus { border-color: var(--gold); }
+.chat-input-row button {
+  background: var(--gold); border: none; border-radius: 8px; padding: 9px 14px;
+  color: var(--navy); font-weight: 700; cursor: pointer; font-size: 13px;
+}
+.chat-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 12px; }
+.chat-quick button {
+  background: var(--offwhite); border: 1px solid var(--border); border-radius: 20px;
+  padding: 5px 11px; font-size: 11px; cursor: pointer; font-family: inherit; color: var(--navy);
+  transition: background 0.15s;
+}
+.chat-quick button:hover { background: var(--gold); border-color: var(--gold); }
+
+/* ─── FOOTER ────────────────────────────────────────────────────────── */
+footer { background: var(--navy); color: white; padding: 56px 28px 0; }
+.footer-inner { max-width: 1280px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px; padding-bottom: 48px; }
+.footer-about strong { font-family: 'Playfair Display',serif; font-size: 17px; color: var(--gold2); display: block; margin-bottom: 12px; }
+.footer-about p { font-size: 13px; color: #7A8FAF; line-height: 1.7; }
+.footer-col h5 { font-family: 'Nunito Sans',sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gold); margin-bottom: 16px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col ul li a { font-size: 13px; color: #7A8FAF; transition: color 0.2s; }
+.footer-col ul li a:hover { color: white; }
+.footer-contact { font-size: 13px; color: #7A8FAF; }
+.footer-contact p { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.feedback-form { margin-top: 16px; }
+.feedback-form input, .feedback-form textarea {
+  width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px; padding: 10px 14px; color: white; font-family: inherit; font-size: 13px;
+  outline: none; margin-bottom: 8px;
+}
+.feedback-form textarea { resize: vertical; height: 80px; }
+.feedback-form button {
+  width: 100%; background: var(--gold); border: none; border-radius: 8px; padding: 11px;
+  color: var(--navy); font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
+  transition: background 0.2s;
+}
+.feedback-form button:hover { background: var(--gold2); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08); padding: 20px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: #4A5A7A;
+}
+.socials { display: flex; gap: 10px; }
+.socials a {
+  width: 34px; height: 34px; background: rgba(255,255,255,0.06); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+  transition: background 0.2s;
+}
+.socials a:hover { background: var(--gold); }
+
+/* ─── UTILITY BUTTONS ───────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); color: var(--navy); border: none;
+  padding: 12px 24px; border-radius: 9px; font-weight: 700;
+  font-size: 14px; cursor: pointer; font-family: inherit;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--navy); border: 2px solid var(--navy);
+  padding: 11px 22px; border-radius: 9px; font-weight: 700;
+  font-size: 14px; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.btn-outline:hover { background: var(--navy); color: white; }
+
+/* ─── EMERGENCY MODAL ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white; 
+  border-radius: 16px; 
+  max-width: 500px; 
+  width: 100%;
+  overflow: hidden; 
+  animation: slideUp 0.25s ease;
+  /* Добавленные свойства для фиксации размера */
+  max-height: 90vh;           /* Окно не будет выше 90% экрана */
+  display: flex;              /* Позволяет управлять шапкой и телом отдельно */
+  flex-direction: column;     /* Располагает элементы сверху вниз */
+}
+@keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-head { 
+  background: var(--red); 
+  color: white; 
+  padding: 20px 24px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px;
+  /* Добавленное свойство */
+  flex-shrink: 0;             /* Запрещает шапке сжиматься, оставляя крестик на месте */
+}
+
+.modal-body { 
+  padding: 24px;
+  /* Добавленное свойство */
+  overflow-y: auto;           /* Включает прокрутку внутри окна, если контента много */
+}
+.emer-contact { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: var(--offwhite); border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); }
+.emer-contact-info strong { font-size: 14px; color: var(--navy); display: block; }
+.emer-contact-info span { font-size: 12px; color: var(--muted); }
+.emer-contact a.call-btn { background: var(--gold); color: var(--navy); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px; }
+.emer-contact a.call-btn:hover { background: var(--gold2); }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: white; line-height: 1; }
+.modal-note { font-size: 12px; color: var(--muted); margin-top: 16px; padding: 12px; background: var(--offwhite); border-radius: 8px; line-height: 1.6; }
+
+/* ─── VISA CALCULATOR ───────────────────────────────────────────────── */
+.visa-calc {
+  background: var(--offwhite); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px; margin-top: 24px; max-width: 480px;
+}
+.visa-calc h4 { font-family: 'Nunito Sans',sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+.vc-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.vc-row label { font-size: 13px; font-weight: 600; color: var(--navy); display: block; margin-bottom: 5px; }
+.vc-row input, .vc-row select {
+  padding: 10px 13px; border: 1px solid var(--border); border-radius: 8px;
+  font-family: inherit; font-size: 13px; color: var(--text); background: white; outline: none;
+}
+.vc-row input:focus, .vc-row select:focus { border-color: var(--gold); }
+.vc-result { margin-top: 16px; background: var(--navy); color: white; border-radius: 10px; padding: 16px 18px; font-size: 14px; display: none; line-height: 1.8; }
+.vc-result strong { color: var(--gold2); font-size: 18px; display: block; margin-bottom: 4px; }
+
+/* ─── SERVICE MODAL ─────────────────────────────────────────────────── */
+.service-modal-body { padding: 24px; }
+.service-modal-body h4 { font-family: 'Nunito Sans',sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+.service-modal-body ol { padding-left: 18px; color: var(--muted); font-size: 14px; line-height: 2; }
+.service-modal-body .req-list { margin-top: 12px; background: var(--offwhite); border-radius: 8px; padding: 14px 18px; }
+.service-modal-body .req-list li { font-size: 13px; color: var(--text); line-height: 1.8; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+/* ─── TOAST ─────────────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 100px; right: 28px; z-index: 3000;
+  background: var(--navy); color: white; padding: 14px 20px; border-radius: 10px;
+  font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  display: flex; align-items: center; gap: 10px;
+  transform: translateY(20px); opacity: 0; pointer-events: none;
+  transition: transform 0.3s, opacity 0.3s;
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { border-left: 4px solid #4caf7d; }
+.toast.error { border-left: 4px solid var(--red); }
+
+/* ─── RESPONSIVE ────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { display: none; }
+  .menu-toggle { display: flex; }
+  .map-layout { grid-template-columns: 1fr; }
+  .embassy-list { max-height: 280px; }
+  .cabinet-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 600px) {
+  .header-inner { padding: 0 16px; }
+  .logo-text strong { font-size: 13px; }
+  .hero { padding: 44px 16px 36px; }
+  .section { padding: 44px 16px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 24px; }
+  .btn-emergency span { display: none; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .chat-bubble { width: 290px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner" onclick="openEmergency()">
+  <span class="dot"></span>
+  ⚠️ Срочное оповещение: Изменение режима работы консульства в Москве с 15 апреля. Нажмите для подробностей →
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="logo-emblem">🏛️</div>
+      <div class="logo-text">
+        <strong>Консульская служба КР</strong>
+        <span>Ministry of Foreign Affairs</span>
+      </div>
+    </div>
+    <nav>
+      <a href="#services">Услуги</a>
+      <a href="#embassies">Посольства</a>
+      <a href="#info">Гражданам / Мигрантам</a>
+      <a href="#news">Новости</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switcher">
+        <button class="active" onclick="setLang(this,'ru')">РУС</button>
+        <button onclick="setLang(this,'kg')">КЫР</button>
+        <button onclick="setLang(this,'en')">ENG</button>
+      </div>
+      <button
+        type="button"
+        onclick="openCabinet();return false;"
+        style="background:none;border:1px solid rgba(255,255,255,0.15);color:#9AABCC;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s"
+        onmouseover="this.style.background='var(--gold)';this.style.borderColor='var(--gold)';this.style.color='var(--navy)'"
+        onmouseout="this.style.background='';this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='#9AABCC'"
+        aria-haspopup="dialog"
+        aria-controls="cabinetModal"
+      >Личный кабинет</button>
+      <button class="btn-emergency" onclick="openEmergency()">
+        🚨 <span>Экстренная помощь 24/7</span>
+      </button>
+      <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Меню">☰</button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#services" onclick="closeMobileMenu()">Услуги</a>
+    <a href="#embassies" onclick="closeMobileMenu()">Посольства</a>
+    <a href="#info" onclick="closeMobileMenu()">Гражданам / Мигрантам</a>
+    <a href="#news" onclick="closeMobileMenu()">Новости</a>
+    <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="section-label">Официальный портал</p>
+    <h1>Консульские услуги<br><span>Кыргызской Республики</span></h1>
+    <p>Найдите ближайшее посольство, запишитесь онлайн и получите все необходимые документы.</p>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="🔍  Найти посольство или консульство..." oninput="filterEmbassies(this.value)" onkeydown="if(event.key==='Enter') doSearch()">
+      <button onclick="doSearch()">Найти →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat" role="button" tabindex="0" style="cursor:pointer" onclick="document.getElementById('embassies').scrollIntoView({behavior:'smooth'})" onkeydown="if(event.key==='Enter'||event.key===' ') this.click()">
+        <strong>47</strong><span>Представительств</span>
+      </div>
+      <div class="hero-stat" role="button" tabindex="0" style="cursor:pointer" onclick="document.getElementById('embassies').scrollIntoView({behavior:'smooth'})" onkeydown="if(event.key==='Enter'||event.key===' ') this.click()">
+        <strong>38</strong><span>Стран присутствия</span>
+      </div>
+      <div class="hero-stat" role="button" tabindex="0" style="cursor:pointer" onclick="openEmergency()" onkeydown="if(event.key==='Enter'||event.key===' ') this.click()">
+        <strong>24/7</strong><span>Экстренная линия</span>
+      </div>
+      <div class="hero-stat" role="button" tabindex="0" style="cursor:pointer" onclick="openServiceModal('visa')" onkeydown="if(event.key==='Enter'||event.key===' ') this.click()">
+        <strong>E-Visa</strong><span>Онлайн-виза</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section section-services" id="services">
+  <div class="section-inner">
+    <p class="section-label">Что мы предлагаем</p>
+    <h2 class="section-title">Популярные услуги</h2>
+    <p class="section-sub">Выберите нужную услугу и узнайте, как её получить</p>
+    <div class="services-grid">
+      <div class="service-card" onclick="openServiceModal('passport')">
+        <div class="service-icon">🛂</div>
+        <h3>Паспорт гражданина КР</h3>
+        <p>Оформление, продление и замена паспорта за рубежом</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="service-card" onclick="openServiceModal('visa')">
+        <div class="service-icon">🌐</div>
+        <h3>Виза в КР (E-Visa)</h3>
+        <p>Электронная виза для иностранных граждан онлайн</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="service-card" onclick="openServiceModal('birth')">
+        <div class="service-icon">👶</div>
+        <h3>Свидетельство о рождении</h3>
+        <p>Регистрация рождения ребёнка за рубежом</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="service-card" onclick="openServiceModal('notary')">
+        <div class="service-icon">📋</div>
+        <h3>Нотариальные услуги</h3>
+        <p>Заверение документов, апостиль, переводы</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="service-card" onclick="openServiceModal('consular')">
+        <div class="service-icon">📝</div>
+        <h3>Консульский учёт</h3>
+        <p>Постановка на учёт гражданина КР за рубежом</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="service-card" onclick="openServiceModal('work')">
+        <div class="service-icon">💼</div>
+        <h3>Разрешение на работу</h3>
+        <p>Получение рабочей визы и разрешения для иностранцев в КР</p>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="section section-map" id="embassies">
+  <div class="section-inner">
+    <p class="section-label">Где нас найти</p>
+    <h2 class="section-title">Посольства и консульства</h2>
+    <p class="section-sub">Нажмите на метку на карте или выберите страну из списка</p>
+    <div class="map-layout">
+      <div style="position:relative">
+        <div class="map-api-banner" id="apiBanner">
+          🗝️ <span>Введите <a href="https://console.cloud.google.com/apis/library/maps-javascript-api" target="_blank">Google Maps API ключ</a>:</span>
+          <input type="text" id="apiKeyInput" placeholder="AIza...">
+          <button onclick="applyApiKey()">Применить</button>
+        </div>
+        <div id="map"></div>
+      </div>
+      <div class="embassy-list" id="embassyList"></div>
+    </div><!-- end map-layout -->
+  </div>
+</section>
+
+<!-- INFO TABS -->
+<section class="section section-info" id="info">
+  <div class="section-inner">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('citizens', this)">🇰🇬 Гражданам КР за рубежом</button>
+      <button class="tab-btn" onclick="switchTab('foreigners', this)">🌍 Иностранным гражданам и мигрантам в КР</button>
+    </div>
+
+    <div class="tab-content active" id="tab-citizens">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="ic-icon">🔴</div>
+          <h4>Потерял паспорт за рубежом</h4>
+          <p>Пошаговая инструкция: как сообщить в консульство, получить временный документ и вернуться домой.</p>
+          <a class="btn-link" href="#faq" onclick="openFaqById(0)">Читать инструкцию →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">📋</div>
+          <h4>Консульский учёт</h4>
+          <p>Как встать на учёт — онлайн через личный кабинет или лично в консульстве. Зачем это нужно.</p>
+          <a class="btn-link" href="#cabinet">Как оформить →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">⚖️</div>
+          <h4>Правовая помощь</h4>
+          <p>Арест, задержание, проблемы с работодателем за рубежом. Контакты дежурного консула.</p>
+          <a class="btn-link" href="#" onclick="openEmergency();return false;">Получить помощь →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">💸</div>
+          <h4>Помощь в кризисной ситуации</h4>
+          <p>Медицинская эвакуация, экстренная финансовая помощь, содействие в репатриации.</p>
+          <a class="btn-link" href="#" onclick="openEmergency();return false;">Подробнее →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🌍</div>
+          <h4>Безопасность за рубежом</h4>
+          <p>Карта рекомендаций МИД КР по странам: зоны высокого риска, туристические предупреждения.</p>
+          <a class="btn-link" href="#embassies">Проверить страну →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">👨‍👩‍👧</div>
+          <h4>Регистрация брака / рождения</h4>
+          <p>Регистрация актов гражданского состояния в консульстве для граждан, проживающих за рубежом.</p>
+          <a class="btn-link" href="#" onclick="openServiceModal('birth');return false;">Узнать порядок →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-foreigners">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="ic-icon">🌐</div>
+          <h4>Электронная виза (E-Visa)</h4>
+          <p>Оформите визу онлайн за 3–5 рабочих дней. Доступна для граждан 60+ стран.</p>
+          <a class="btn-link" href="#" onclick="openServiceModal('visa');return false;">Подать заявку →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🏠</div>
+          <h4>Регистрация в КР</h4>
+          <p>Правила регистрации иностранных граждан по месту пребывания. Сроки и штрафы.</p>
+          <a class="btn-link" href="#faq">Как зарегистрироваться →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">💼</div>
+          <h4>Разрешение на работу</h4>
+          <p>Документы, порядок получения, квоты и особые случаи для граждан ЕАЭС.</p>
+          <a class="btn-link" href="#" onclick="openServiceModal('work');return false;">Требования →</a>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">⚖️</div>
+          <h4>Права мигрантов</h4>
+          <p>Ваши права в КР. Горячая линия по защите прав мигрантов: <strong>0800-800-60</strong> (бесплатно).</p>
+          <a class="btn-link" href="#" onclick="openEmergency();return false;">Контакты помощи →</a>
+        </div>
+      </div>
+
+      <!-- VISA CALCULATOR -->
+      <div class="visa-calc">
+        <h4>📅 Калькулятор визового срока</h4>
+        <div class="vc-row">
+          <div>
+            <label>Дата въезда</label>
+            <input type="date" id="vcEntry">
+          </div>
+          <div>
+            <label>Тип визы</label>
+            <select id="vcType">
+              <option value="30">Туристическая (30 дней)</option>
+              <option value="60">Деловая (60 дней)</option>
+              <option value="90">Долгосрочная (90 дней)</option>
+              <option value="180">Многократная (180 дней)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:14px" onclick="calcVisa()">Рассчитать</button>
+        <div class="vc-result" id="vcResult"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-faq" id="faq">
+  <div class="section-inner">
+    <p class="section-label">Частые вопросы</p>
+    <h2 class="section-title">FAQ</h2>
+    <p class="section-sub">Найдите ответ по ключевым словам</p>
+    <div class="faq-search">
+      <input type="text" id="faqSearch" placeholder="Введите вопрос — например, «паспорт», «виза», «учёт»..." oninput="filterFaq(this.value)">
+      <button onclick="filterFaq(document.getElementById('faqSearch').value)">🔍</button>
+    </div>
+    <div class="faq-list" id="faqList"></div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="section section-news" id="news">
+  <div class="section-inner">
+    <p class="section-label">Медиа-центр</p>
+    <h2 class="section-title">Новости и оповещения</h2>
+    <p class="section-sub">Официальные сообщения МИД Кыргызской Республики</p>
+    <div class="news-grid" id="newsGrid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <strong>Консульская служба КР</strong>
+        <p>Официальный портал Министерства иностранных дел Кыргызской Республики. Консульская помощь гражданам КР за рубежом и иностранным гражданам в КР.</p>
+        <div class="socials" style="margin-top:16px">
+          <a href="#" title="Facebook" onclick="showToast('Facebook МИД КР', 'success')">📘</a>
+          <a href="#" title="Telegram" onclick="showToast('Telegram-канал МИД КР', 'success')">✈️</a>
+          <a href="#" title="Instagram" onclick="showToast('Instagram МИД КР', 'success')">📸</a>
+          <a href="#" title="YouTube" onclick="showToast('YouTube-канал МИД КР', 'success')">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Гражданам КР</h5>
+        <ul>
+          <li><a href="#services" onclick="openServiceModal('passport')">Паспорт за рубежом</a></li>
+          <li><a href="#cabinet">Консульский учёт</a></li>
+          <li><a href="#info">Потерял документы</a></li>
+          <li><a href="#faq">Правовая помощь</a></li>
+          <li><a href="#info">Безопасность за рубежом</a></li>
+          <li><a href="#services">Регистрация брака / рождения</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Иностранцам</h5>
+        <ul>
+          <li><a href="#info" onclick="switchTab('foreigners', document.querySelectorAll('.tab-btn')[1])">E-Visa онлайн</a></li>
+          <li><a href="#services">Разрешение на работу</a></li>
+          <li><a href="#info">Регистрация в КР</a></li>
+          <li><a href="#faq">Права мигрантов</a></li>
+          <li><a href="#embassies">Найти консульство</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Обратная связь</h5>
+        <div class="footer-contact">
+          <p>📍 ул. Раззакова, 53, Бишкек</p>
+          <p>📞 <a href="tel:+996312663333">+996 312 66-33-33</a></p>
+          <p>📧 <a href="mailto:info@mfa.gov.kg">info@mfa.gov.kg</a></p>
+          <p>🕐 Пн–Пт: 09:00–18:00</p>
+        </div>
+        <div class="feedback-form">
+          <input type="text" id="fbName" placeholder="Ваше имя">
+          <input type="email" id="fbEmail" placeholder="Email">
+          <textarea id="fbMsg" placeholder="Ваше сообщение..."></textarea>
+          <button onclick="submitFeedback()">Отправить сообщение</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Министерство иностранных дел Кыргызской Республики. Все права защищены.</span>
+      <div style="display:flex;gap:16px">
+        <a href="#" style="color:#4A5A7A;transition:color 0.2s" onmouseover="this.style.color='#9AABCC'" onmouseout="this.style.color='#4A5A7A'">Политика конфиденциальности</a>
+        <a href="#" style="color:#4A5A7A;transition:color 0.2s" onmouseover="this.style.color='#9AABCC'" onmouseout="this.style.color='#4A5A7A'">Условия использования</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-overlay" id="emergencyModal" onclick="if(event.target===this)closeEmergency()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <span style="font-size:22px">🚨</span>
+        <h3>Экстренная консульская помощь</h3>
+      </div>
+      <button class="modal-close" onclick="closeEmergency()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Круглосуточная горячая линия для граждан КР, находящихся за рубежом в кризисной ситуации.</p>
+      <div class="emer-contact">
+        <div class="emer-contact-info">
+          <strong>Дежурный консул (Центр)</strong>
+          <span>Для граждан в Европе, Азии, СНГ</span>
+        </div>
+        <a href="tel:+996312663355" class="call-btn">+996 312 66-33-55</a>
+      </div>
+      <div class="emer-contact">
+        <div class="emer-contact-info">
+          <strong>Горячая линия МИД КР</strong>
+          <span>Для граждан на Ближнем Востоке, Африке</span>
+        </div>
+        <a href="tel:+996312663366" class="call-btn">+996 312 66-33-66</a>
+      </div>
+      <div class="emer-contact">
+        <div class="emer-contact-info">
+          <strong>Telegram-бот экстренной помощи</strong>
+          <span>Быстрая связь через мессенджер</span>
+        </div>
+        <a href="https://t.me/kg_consular_bot" class="call-btn">Открыть →</a>
+      </div>
+      <div class="modal-note">
+        ⚠️ Данная линия предназначена исключительно для экстренных ситуаций: задержание, утеря документов, медицинская помощь, угроза жизни. По вопросам оформления документов обращайтесь в рабочее время.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-overlay" id="serviceModal" onclick="if(event.target===this)closeServiceModal()">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-head" style="background:var(--navy)">
+      <div class="modal-head-left">
+        <span id="serviceModalIcon" style="font-size:22px">📋</span>
+        <h3 id="serviceModalTitle">Услуга</h3>
+      </div>
+      <button class="modal-close" onclick="closeServiceModal()">✕</button>
+    </div>
+    <div class="service-modal-body" id="serviceModalBody"></div>
+  </div>
+</div>
+
+<!-- CABINET MODAL -->
+<div class="modal-overlay" id="cabinetModal" onclick="if(event.target===this)closeCabinet()">
+  <div class="modal" style="max-width:980px">
+    <div class="modal-head" style="background:var(--navy)">
+      <div class="modal-head-left"
+        <span style="font-size:22px">👤</span>
+        <h3>Личный кабинет</h3>
+      </div>
+      <button class="modal-close" onclick="closeCabinet()">x</button>
+    </div>
+    <div class="modal-body" style="background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);color:white">
+      <p style="font-size:13px;color:#9AABCC;margin-bottom:18px">Запись на приём, загрузка документов и отслеживание статуса заявки</p>
+      <div class="cabinet-grid">
+
+        <!-- QUEUE -->
+        <div class="cabinet-panel">
+          <h3>🗓️ Электронная очередь</h3>
+          <p style="font-size:13px;color:#7A8FAF;margin-bottom:14px">Посольство в Москве · Вторник, 15 апреля</p>
+          <div class="queue-slots" id="slots"></div>
+          <button class="btn-primary" style="margin-top:16px;width:100%;justify-content:center" onclick="bookSlot()">Подтвердить запись</button>
+        </div>
+
+        <!-- UPLOAD -->
+        <div class="cabinet-panel">
+          <h3>📁 Загрузка документов</h3>
+          <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+            <div class="uz-icon">📤</div>
+            <p>Перетащите файлы сюда или <strong>выберите с устройства</strong></p>
+            <p style="margin-top:6px;font-size:11px;color:#4A5A7A">PDF, JPG, PNG · до 10 МБ каждый</p>
+          </div>
+          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFiles(this.files)">
+          <div class="file-list" id="fileList"></div>
+        </div>
+
+        <!-- TRACKER -->
+        <div class="cabinet-panel">
+          <h3>📍 Статус заявки</h3>
+          <p style="font-size:13px;color:#7A8FAF;margin-bottom:14px">Заявка #KG-2025-04812 · Паспорт</p>
+          <div class="tracker-steps">
+            <div class="tracker-step">
+              <div class="ts-circle done">✓</div>
+              <div class="ts-info"><strong>Документы получены</strong><span>12 апреля 2025, 10:30</span></div>
+            </div>
+            <div class="tracker-step">
+              <div class="ts-circle done">✓</div>
+              <div class="ts-info"><strong>Проверка данных</strong><span>13 апреля 2025, 14:00</span></div>
+            </div>
+            <div class="tracker-step">
+              <div class="ts-circle active">⚡</div>
+              <div class="ts-info"><strong>Оформление паспорта</strong><span>В процессе...</span></div>
+            </div>
+            <div class="tracker-step">
+              <div class="ts-circle pending">○</div>
+              <div class="ts-info"><strong>Готов к выдаче</strong><span>Ожидается 18 апреля</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="cabinet-panel">
+          <h3>🔐 Вход в кабинет</h3>
+          <p style="font-size:13px;color:#7A8FAF;margin-bottom:16px">Войдите через ИНН или номер паспорта</p>
+          <input type="text" id="loginId" placeholder="ИНН или № паспорта" style="width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:11px 14px;color:white;font-family:inherit;font-size:13px;outline:none;margin-bottom:10px">
+          <input type="password" id="loginPass" placeholder="Пароль" style="width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:11px 14px;color:white;font-family:inherit;font-size:13px;outline:none;margin-bottom:14px">
+          <button class="btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">Войти в кабинет</button>
+          <p style="font-size:12px;color:#4A5A7A;margin-top:10px;text-align:center">Нет аккаунта? <span style="color:var(--gold2);cursor:pointer" onclick="showToast('Регистрация будет доступна в ближайшее время', 'success')">Зарегистрироваться</span></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-bubble" id="chatBubble">
+    <div class="chat-head">
+      <div class="chat-head-left">
+        <div class="ch-avatar">🤖</div>
+        <div>
+          <strong>Консульский ассистент</strong>
+          <span>Онлайн · обычно отвечает быстро</span>
+        </div>
+      </div>
+      <button class="chat-head-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg bot">Здравствуйте! Я помогу вам найти нужную информацию о консульских услугах. Чем могу помочь? 👋</div>
+    </div>
+    <div class="chat-quick" id="chatQuick">
+      <button onclick="sendQuickMsg('Как получить паспорт?')">🛂 Паспорт</button>
+      <button onclick="sendQuickMsg('Как оформить визу?')">🌐 Виза</button>
+      <button onclick="sendQuickMsg('Где ближайшее консульство?')">📍 Адреса</button>
+      <button onclick="sendQuickMsg('Экстренная помощь')">🚨 Помощь</button>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeydown="if(event.key==='Enter') sendChat()">
+      <button onclick="sendChat()">→</button>
+    </div>
+  </div>
+  <button class="chat-btn" onclick="toggleChat()">💬</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════════════════ */
+const embassies = [
+  { id: 1, country: 'Россия', city: 'Москва', flag: '🇷🇺', lat: 55.7558, lng: 37.6173, address: 'ул. Большая Ордынка, 64', phone: '+7 495 237-46-82', hours: 'Пн–Пт 09:00–13:00', type: 'Посольство' },
+  { id: 2, country: 'Россия', city: 'Екатеринбург', flag: '🇷🇺', lat: 56.8389, lng: 60.6057, address: 'ул. Куйбышева, 44', phone: '+7 343 258-79-00', hours: 'Пн–Пт 10:00–13:00', type: 'Консульство' },
+  { id: 3, country: 'Казахстан', city: 'Алматы', flag: '🇰🇿', lat: 43.2220, lng: 76.8512, address: 'ул. Сатпаева, 30', phone: '+7 727 292-20-65', hours: 'Пн–Пт 09:00–17:00', type: 'Посольство' },
+  { id: 4, country: 'Китай', city: 'Пекин', flag: '🇨🇳', lat: 39.9042, lng: 116.4074, address: 'Sanlitun Dongzhimenwai St.', phone: '+86 10 6532-6458', hours: 'Пн–Пт 09:00–12:00', type: 'Посольство' },
+  { id: 5, country: 'Германия', city: 'Берлин', flag: '🇩🇪', lat: 52.5200, lng: 13.4050, address: 'Otto-Suhr-Allee 146, Berlin', phone: '+49 30 347-99-380', hours: 'Вт, Чт 10:00–13:00', type: 'Посольство' },
+  { id: 6, country: 'США', city: 'Вашингтон', flag: '🇺🇸', lat: 38.9072, lng: -77.0369, address: '2360 Massachusetts Ave NW', phone: '+1 202 338-5141', hours: 'Пн–Пт 09:00–17:00', type: 'Посольство' },
+  { id: 7, country: 'ОАЭ', city: 'Абу-Даби', flag: '🇦🇪', lat: 24.4539, lng: 54.3773, address: 'Al Mushrif Area, Abu Dhabi', phone: '+971 2 444-0965', hours: 'Пн–Пт 09:00–15:00', type: 'Посольство' },
+  { id: 8, country: 'Турция', city: 'Анкара', flag: '🇹🇷', lat: 39.9334, lng: 32.8597, address: 'Koza Sk. No:14, Gaziosmanpaşa', phone: '+90 312 446-86-08', hours: 'Пн–Пт 09:00–17:00', type: 'Посольство' },
+  // Тестовые посольства (демо)
+];
+
+const newsData = [
+  {
+    title: 'Изменение режима работы консульства в Москве с 15 апреля 2025',
+    description: 'Консульский отдел будет работать по новому расписанию с пн по чт с 09:00 до 13:00.',
+    date: '14 апреля 2025',
+    source: 'МИД Кыргызской Республики',
+    url: 'https://mfa.gov.kg/',
+  },
+  {
+    title: 'КР и ОАЭ подписали соглашение о безвизовом режиме для граждан обеих стран',
+    description: 'Документ вступает в силу 1 июня 2025 года — поездки без визы на срок до 30 дней.',
+    date: '11 апреля 2025',
+    source: 'Пресс-служба МИД КР',
+    url: 'https://mfa.gov.kg/',
+  },
+  {
+    title: 'Выездные консульские дни в Екатеринбурге: запись открыта',
+    description: '20–22 апреля МИД КР организует выездной приём граждан в г. Екатеринбург.',
+    date: '9 апреля 2025',
+    source: 'Консульская служба КР',
+    url: 'https://mfa.gov.kg/',
+  },
+];
+
+const faqData = [
+  { q: 'Как получить паспорт гражданина КР за рубежом?', a: 'Для получения паспорта за рубежом необходимо обратиться в консульство КР по месту проживания. Потребуются: старый паспорт (или заявление об утере), справка с места жительства за рубежом, фото 3×4 (2 шт.), квитанция об оплате консульского сбора. Срок оформления — 30 рабочих дней.', tags: ['паспорт', 'документ'] },
+  { q: 'Что делать, если я потерял паспорт за рубежом?', a: '1. Немедленно обратитесь в ближайшее консульство КР или по телефону экстренной линии. 2. Подайте заявление об утере/краже. 3. Обратитесь в местную полицию и получите справку. 4. Консульство выдаст свидетельство на возвращение (СНВ) для однократного въезда в КР. Срок выдачи СНВ — 1–3 рабочих дня.', tags: ['паспорт', 'потерял', 'утеря', 'кража'] },
+  { q: 'Как оформить E-Visa для въезда в Кыргызстан?', a: 'Электронная виза оформляется через сайт e.gov.kg. Необходимо: заполнить анкету, загрузить фото и копию паспорта, оплатить сбор (ок. $25–70 в зависимости от типа). Срок рассмотрения — 3–5 рабочих дней. E-Visa доступна для граждан более 60 стран мира.', tags: ['виза', 'e-visa', 'иностранцы'] },
+  { q: 'Как встать на консульский учёт?', a: 'Постановка на консульский учёт возможна онлайн через личный кабинет на данном портале или лично в консульстве. Необходимо: паспорт гражданина КР, документ о проживании за рубежом (вид на жительство, виза, регистрация). Учёт бесплатный. Это важно для получения помощи в экстренных ситуациях.', tags: ['учёт', 'консульский учёт', 'регистрация'] },
+  { q: 'Как зарегистрировать рождение ребёнка за рубежом?', a: 'Для регистрации рождения ребёнка гражданина КР за рубежом нужно обратиться в консульство в течение 12 месяцев. Документы: заявление родителей, свидетельство о рождении, выданное местными органами, паспорта обоих родителей, свидетельство о браке (при наличии). Срок — 15 рабочих дней.', tags: ['рождение', 'свидетельство', 'ребёнок'] },
+  { q: 'Как получить нотариально заверенный документ в консульстве?', a: 'Консульство выполняет: заверение копий документов, удостоверение подписей, апостиль, заверение переводов. Приём осуществляется по предварительной записи. Размер консульского сбора — согласно утверждённому тарифу. Для записи используйте раздел «Личный кабинет».', tags: ['нотариус', 'нотариальные', 'апостиль', 'перевод', 'заверение'] },
+  { q: 'Как получить разрешение на работу в КР для иностранца?', a: 'Иностранные граждане из стран ЕАЭС (Россия, Казахстан, Беларусь, Армения) работают без разрешения. Для граждан других стран необходимо: предложение о работе от работодателя в КР, заявление в Государственную службу миграции, справка об отсутствии судимости, медицинская справка. Срок — 10 рабочих дней.', tags: ['работа', 'разрешение', 'трудоустройство', 'мигрант', 'иностранец'] },
+  { q: 'Каковы сроки рассмотрения заявлений на паспорт?', a: 'Стандартный срок оформления паспорта через консульство — 30 рабочих дней. Срочное оформление (при наличии уважительной причины) — 10–15 рабочих дней. Биометрический паспорт нового образца оформляется только в КР или через почтовое отделение МИД.', tags: ['паспорт', 'сроки', 'срочно'] },
+];
+
+const serviceDetails = {
+  passport: {
+    icon: '🛂', title: 'Паспорт гражданина КР',
+    html: `<h4>Необходимые документы:</h4>
+      <div class="req-list"><ol>
+        <li>Действующий паспорт или справка об утере</li>
+        <li>Заполненная анкета-заявление</li>
+        <li>2 фотографии 3×4 см (на белом фоне)</li>
+        <li>Документ, подтверждающий проживание за рубежом</li>
+        <li>Квитанция об оплате консульского сбора (~3 000 сом)</li>
+      </ol></div>
+      <h4 style="margin-top:16px">Сроки:</h4>
+      <p style="font-size:13px;color:var(--muted);margin-top:6px">Стандартный — 30 рабочих дней · Срочный — 10–15 рабочих дней</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeServiceModal();openCabinet()">Записаться на приём →</button>
+        <button class="btn-outline" onclick="closeServiceModal();document.getElementById('faq').scrollIntoView({behavior:'smooth'})">Подробнее в FAQ</button>
+      </div>`
+  },
+  visa: {
+    icon: '🌐', title: 'Электронная виза (E-Visa)',
+    html: `<h4>Порядок оформления:</h4>
+      <div class="req-list"><ol>
+        <li>Заполните анкету на портале e.gov.kg</li>
+        <li>Загрузите фото и скан паспорта</li>
+        <li>Оплатите визовый сбор (от $25)</li>
+        <li>Дождитесь решения (3–5 рабочих дней)</li>
+        <li>Распечатайте или сохраните E-Visa</li>
+      </ol></div>
+      <h4 style="margin-top:16px">Типы виз:</h4>
+      <p style="font-size:13px;color:var(--muted);margin-top:6px">Туристическая (30 дней) · Деловая (60 дней) · Долгосрочная (90 дней) · Многократная (180 дней)</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="switchTab('foreigners',document.querySelectorAll('.tab-btn')[1]);closeServiceModal();document.getElementById('info').scrollIntoView({behavior:'smooth'})">Калькулятор визы →</button>
+      </div>`
+  },
+  birth: {
+    icon: '👶', title: 'Свидетельство о рождении',
+    html: `<h4>Документы для регистрации рождения:</h4>
+      <div class="req-list"><ol>
+        <li>Свидетельство о рождении, выданное местными органами</li>
+        <li>Паспорта обоих родителей — граждан КР</li>
+        <li>Свидетельство о браке (или решение суда)</li>
+        <li>Заявление установленного образца</li>
+        <li>Квитанция об оплате сбора (~1 500 сом)</li>
+      </ol></div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">Срок подачи: в течение 12 месяцев с даты рождения. Срок готовности — 15 рабочих дней.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeServiceModal();openCabinet()">Записаться →</button>
+      </div>`
+  },
+  notary: {
+    icon: '📋', title: 'Нотариальные услуги',
+    html: `<h4>Перечень нотариальных услуг:</h4>
+      <div class="req-list"><ol>
+        <li>Заверение копий документов и подписей</li>
+        <li>Апостиль на документах КР</li>
+        <li>Удостоверение доверенностей</li>
+        <li>Заверение переводов документов</li>
+        <li>Свидетельствование верности перевода</li>
+      </ol></div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">Приём — строго по предварительной записи. Тариф на услуги публикуется на стенде консульства.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeServiceModal();openCabinet()">Записаться →</button>
+      </div>`
+  },
+  consular: {
+    icon: '📝', title: 'Консульский учёт',
+    html: `<h4>Как встать на учёт:</h4>
+      <div class="req-list"><ol>
+        <li>Войдите в Личный кабинет на этом портале</li>
+        <li>Заполните форму постановки на учёт</li>
+        <li>Приложите скан паспорта КР и вида на жительство</li>
+        <li>Дождитесь подтверждения по email (1–3 дня)</li>
+      </ol></div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">Услуга бесплатная. Постановка на учёт позволяет получать оперативную помощь консульства в кризисных ситуациях.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeServiceModal();openCabinet()">Зарегистрироваться →</button>
+      </div>`
+  },
+  work: {
+    icon: '💼', title: 'Разрешение на работу',
+    html: `<h4>Необходимые документы:</h4>
+      <div class="req-list"><ol>
+        <li>Предложение о работе от работодателя в КР</li>
+        <li>Заявление в Госслужбу миграции</li>
+        <li>Справка об отсутствии судимости (апостиль)</li>
+        <li>Медицинская справка</li>
+        <li>Квитанция об оплате госпошлины</li>
+      </ol></div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">Граждане стран ЕАЭС работают без разрешения. Срок рассмотрения — 10 рабочих дней.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="closeServiceModal();document.getElementById('faq').scrollIntoView({behavior:'smooth'})">Подробнее в FAQ →</button>
+      </div>`
+  },
+};
+
+const chatResponses = {
+  'паспорт': 'Для оформления паспорта за рубежом обратитесь в ближайшее консульство КР. Нужны: старый паспорт, 2 фото 3×4, квитанция об оплате (~3 000 сом). Срок — 30 рабочих дней. 🛂',
+  'виза': 'E-Visa оформляется на портале e.gov.kg за 3–5 рабочих дней. Доступна для граждан 60+ стран. Стоимость от $25. Используйте калькулятор в разделе «Мигрантам». 🌐',
+  'консульство': 'Используйте интерактивную карту на странице — нажмите «Посольства». Там вы найдёте адреса, телефоны и часы работы всех представительств КР. 📍',
+  'адрес': 'Используйте интерактивную карту на странице — нажмите «Посольства». Там вы найдёте адреса, телефоны и часы работы всех представительств КР. 📍',
+  'помощь': 'Для экстренной помощи 24/7 звоните: +996 312 66-33-55. Также доступен Telegram-бот @kg_consular_bot. 🚨',
+  'экстренная': 'Для экстренной помощи 24/7 звоните: +996 312 66-33-55. Также доступен Telegram-бот @kg_consular_bot. 🚨',
+  'учёт': 'Консульский учёт можно оформить онлайн через Личный кабинет на портале. Это бесплатно и занимает 1–3 дня. 📝',
+  'работа': 'Для разрешения на работу в КР нужны: оффер от работодателя, справка о несудимости, медсправка. Граждане ЕАЭС работают без разрешения. 💼',
+  'рождение': 'Для регистрации рождения ребёнка обратитесь в консульство в течение 12 месяцев. Нужны паспорта родителей и местное свидетельство о рождении. 👶',
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   GOOGLE MAPS
+═══════════════════════════════════════════════════════════════════════ */
+let gmap, gmMarkers = [], activeInfoWindow = null, activeEmbassy = null;
+
+// Called by Google Maps script callback
+function initMap() {
+  const mapEl = document.getElementById('map');
+
+  gmap = new google.maps.Map(mapEl, {
+    center: { lat: 42, lng: 55 },
+    zoom: 3,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true,
+    styles: [
+      { elementType: 'geometry', stylers: [{ color: '#f0f4fb' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#1A1A2E' }] },
+      { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#c9d8f0' }] },
+      { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
+      { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#DDE3F0' }] },
+      { featureType: 'administrative.country', elementType: 'geometry.stroke', stylers: [{ color: '#9AABCC' }] },
+      { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+      { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+    ],
+  });
+
+  embassies.forEach(e => {
+    // Custom SVG pin marker
+    const svgActive = (active) => ({
+      path: 'M12 0C7.6 0 4 3.6 4 8c0 5.4 8 16 8 16s8-10.6 8-16c0-4.4-3.6-8-8-8zm0 11c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z',
+      fillColor: active ? '#E8B84B' : '#0D1F3C',
+      fillOpacity: 1,
+      strokeColor: active ? '#C59A2A' : '#E8B84B',
+      strokeWeight: 2,
+      scale: 1.6,
+      anchor: new google.maps.Point(12, 24),
+    });
+
+    const marker = new google.maps.Marker({
+      position: { lat: e.lat, lng: e.lng },
+      map: gmap,
+      title: `${e.type} КР — ${e.city}`,
+      icon: svgActive(false),
+      animation: google.maps.Animation.DROP,
+    });
+
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<div class="gm-popup">
+        <strong>${e.flag} ${e.type} Кыргызстана — ${e.city}</strong>
+        <div class="gm-addr">📍 ${e.address}</div>
+        <div class="gm-phone">📞 ${e.phone}</div>
+        <div class="gm-hours">🕐 ${e.hours}</div>
+        <a class="gm-dir" href="https://www.google.com/maps/search/${encodeURIComponent(e.address + ', ' + e.city)}" target="_blank">Маршрут →</a>
+      </div>`,
+      maxWidth: 260,
+    });
+
+    marker.addListener('click', () => selectEmbassy(e.id));
+    gmMarkers.push({ id: e.id, marker, infoWindow, svgActive });
+  });
+
+  renderEmbassyList(embassies);
+}
+
+function selectEmbassy(id) {
+  const e = embassies.find(x => x.id === id);
+  if (!e) return;
+  activeEmbassy = id;
+
+  // Close previous info window
+  if (activeInfoWindow) activeInfoWindow.close();
+
+  gmMarkers.forEach(m => {
+    const isActive = m.id === id;
+    m.marker.setIcon(m.svgActive(isActive));
+    if (isActive) {
+      m.infoWindow.open(gmap, m.marker);
+      activeInfoWindow = m.infoWindow;
+      gmap.panTo({ lat: e.lat, lng: e.lng });
+      gmap.setZoom(12);
+    }
+  });
+
+  document.querySelectorAll('.embassy-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.id == id);
+  });
+  document.querySelector(`[data-id="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Fallback: load Google Maps dynamically with user-provided key
+function loadGoogleMaps(key) {
+  return new Promise((resolve, reject) => {
+    if (window.google && window.google.maps) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap&language=ru`;
+    s.async = true; s.defer = true;
+    s.onerror = reject;
+    window.initMap = () => { initMap(); resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+function applyApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key || key.length < 10) { showToast('Введите корректный API ключ', 'error'); return; }
+  window.GMAPS_KEY = key;
+  localStorage.setItem('gmaps_key', key);
+  document.getElementById('apiBanner').style.display = 'none';
+  document.getElementById('map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:14px">⏳ Загрузка карты...</div>';
+  loadGoogleMaps(key).catch(() => {
+    showToast('Ошибка загрузки карты. Проверьте ключ и настройки API.', 'error');
+    document.getElementById('apiBanner').style.display = 'flex';
+  });
+}
+
+function renderEmbassyList(list) {
+  const el = document.getElementById('embassyList');
+  if (!list.length) {
+    el.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:10px">Ничего не найдено</p>';
+    return;
+  }
+  el.innerHTML = list.map(e => `
+    <div class="embassy-card${activeEmbassy === e.id ? ' active' : ''}" data-id="${e.id}" onclick="selectEmbassy(${e.id});openEmbassyInMaps(${e.id});">
+      <div class="ec-flag">${e.flag} ${e.type}</div>
+      <h4>${e.country} — ${e.city}</h4>
+      <p>📍 ${e.address}</p>
+      <span class="ec-phone">📞 ${e.phone}</span>
+      <span class="ec-hours">🕐 ${e.hours}</span>
+    </div>
+  `).join('');
+}
+
+function openEmbassyInMaps(id) {
+  const e = embassies.find(x => x.id === id);
+  if (!e) return;
+  const q = encodeURIComponent(`${e.address}, ${e.city}, ${e.country}`);
+  window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, '_blank', 'noopener,noreferrer');
+}
+
+function filterEmbassies(query) {
+  const q = query.toLowerCase().trim();
+  const filtered = q ? embassies.filter(e =>
+    e.country.toLowerCase().includes(q) ||
+    e.city.toLowerCase().includes(q) ||
+    e.address.toLowerCase().includes(q)
+  ) : embassies;
+  renderEmbassyList(filtered);
+}
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value;
+  filterEmbassies(q);
+  document.getElementById('embassies').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════════════════ */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   VISA CALCULATOR
+═══════════════════════════════════════════════════════════════════════ */
+function calcVisa() {
+  const entry = document.getElementById('vcEntry').value;
+  const days = parseInt(document.getElementById('vcType').value);
+  const res = document.getElementById('vcResult');
+  if (!entry) { showToast('Пожалуйста, выберите дату въезда', 'error'); return; }
+  const entryDate = new Date(entry);
+  const exitDate = new Date(entryDate);
+  exitDate.setDate(exitDate.getDate() + days);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const remaining = Math.ceil((exitDate - today) / (1000*60*60*24));
+  const opts = { day: 'numeric', month: 'long', year: 'numeric' };
+  res.style.display = 'block';
+  if (remaining < 0) {
+    res.innerHTML = `<strong>⚠️ Виза истекла!</strong>Дата истечения: ${exitDate.toLocaleDateString('ru-RU', opts)}<br>Просрочка: ${Math.abs(remaining)} дней`;
+    res.style.background = '#4a1a1a';
+  } else if (remaining <= 7) {
+    res.innerHTML = `<strong>⚠️ Срок истекает скоро!</strong>Дата выезда: ${exitDate.toLocaleDateString('ru-RU', opts)}<br>Осталось дней: <b style="color:#f90">${remaining}</b>`;
+    res.style.background = '#3a2a0a';
+  } else {
+    res.innerHTML = `<strong>✅ Виза действительна</strong>Въезд: ${entryDate.toLocaleDateString('ru-RU', opts)}<br>Выезд не позднее: ${exitDate.toLocaleDateString('ru-RU', opts)}<br>Осталось дней: <b style="color:var(--gold2)">${remaining}</b>`;
+    res.style.background = 'var(--navy)';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   QUEUE / SLOTS
+═══════════════════════════════════════════════════════════════════════ */
+const takenSlots = [1, 3, 5, 8];
+let selectedSlot = null;
+const times = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','14:00','14:30','15:00'];
+
+function renderSlots() {
+  const el = document.getElementById('slots');
+  el.innerHTML = times.map((t, i) => {
+    const taken = takenSlots.includes(i);
+    const sel = selectedSlot === i;
+    return `<div class="slot${taken ? ' taken' : ''}${sel ? ' selected' : ''}" onclick="selectSlot(${i})">${t}${taken ? '<br><span style="font-size:10px">Занято</span>' : ''}</div>`;
+  }).join('');
+}
+
+function selectSlot(i) {
+  if (takenSlots.includes(i)) return;
+  selectedSlot = selectedSlot === i ? null : i;
+  renderSlots();
+}
+
+function bookSlot() {
+  if (selectedSlot === null) { showToast('Пожалуйста, выберите время для записи', 'error'); return; }
+  showToast(`✅ Вы записаны на ${times[selectedSlot]}, 15 апреля, Москва`, 'success');
+  takenSlots.push(selectedSlot);
+  selectedSlot = null;
+  renderSlots();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FILE UPLOAD
+═══════════════════════════════════════════════════════════════════════ */
+let uploadedFiles = [];
+
+function handleFiles(files) {
+  const maxSize = 10 * 1024 * 1024;
+  Array.from(files).forEach(f => {
+    if (f.size > maxSize) { showToast(`Файл "${f.name}" превышает 10 МБ`, 'error'); return; }
+    uploadedFiles.push(f);
+  });
+  renderFileList();
+  showToast(`Загружено файлов: ${uploadedFiles.length}`, 'success');
+}
+
+function renderFileList() {
+  const el = document.getElementById('fileList');
+  el.innerHTML = uploadedFiles.map((f, i) => {
+    const icons = { 'application/pdf': '📄', 'image/jpeg': '🖼️', 'image/png': '🖼️' };
+    const icon = icons[f.type] || '📁';
+    const size = (f.size / 1024).toFixed(0) + ' КБ';
+    return `<div class="file-item">${icon} ${f.name} <span style="color:var(--muted);margin-left:4px">${size}</span><button onclick="removeFile(${i})">✕</button></div>`;
+  }).join('');
+}
+
+function removeFile(i) {
+  uploadedFiles.splice(i, 1);
+  renderFileList();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FAQ
+═══════════════════════════════════════════════════════════════════════ */
+function renderFaq(data) {
+  const el = document.getElementById('faqList');
+  if (!data.length) {
+    el.innerHTML = '<p class="faq-empty">По вашему запросу ничего не найдено. Попробуйте другие ключевые слова.</p>';
+    return;
+  }
+  el.innerHTML = data.map((item, i) => `
+    <div class="faq-item" data-idx="${i}">
+      <div class="faq-q" onclick="toggleFaq(this.parentElement)">
+        <span>${item.q}</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">${item.a}</div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NEWS
+═══════════════════════════════════════════════════════════════════════ */
+function renderNews(list) {
+  const grid = document.getElementById('newsGrid');
+  if (!grid) return;
+  if (!list || !list.length) {
+    grid.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:10px">Ничего не найдено</p>';
+    return;
+  }
+
+  grid.innerHTML = list.map((n, idx) => {
+    const imgClass = 'c' + (((idx % 3) + 1));
+    const icon = idx % 3 === 0 ? '🏛️' : (idx % 3 === 1 ? '🤝' : '📢');
+    return `
+      <div class="news-card">
+        <div class="news-img ${imgClass}">${icon}</div>
+        <div class="news-body">
+          <div class="news-tag">${n.source}</div>
+          <h4>${n.title}</h4>
+          <p>${n.description}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px">
+            <div class="news-date">${n.date}</div>
+            <a href="${n.url}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--gold);font-weight:700">Оригинал →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleFaq(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+function filterFaq(query) {
+  const q = query.toLowerCase().trim();
+  const data = window.__faqData || faqData;
+  if (!q) { renderFaq(data); return; }
+  const filtered = data.filter(item =>
+    item.q.toLowerCase().includes(q) ||
+    item.a.toLowerCase().includes(q) ||
+    (item.tags && item.tags.some(t => t.includes(q)))
+  );
+  renderFaq(filtered);
+}
+
+function openFaqById(idx) {
+  document.getElementById('faq').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => {
+    const items = document.querySelectorAll('.faq-item');
+    if (items[idx]) { items[idx].classList.add('open'); items[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  }, 600);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EMERGENCY MODAL
+═══════════════════════════════════════════════════════════════════════ */
+function openEmergency() {
+  document.getElementById('emergencyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeEmergency() {
+  document.getElementById('emergencyModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SERVICE MODAL
+═══════════════════════════════════════════════════════════════════════ */
+function openServiceModal(key) {
+  const s = (window.__serviceDetails || serviceDetails)[key];
+  if (!s) return;
+  document.getElementById('serviceModalIcon').textContent = s.icon;
+  document.getElementById('serviceModalTitle').textContent = s.title;
+  document.getElementById('serviceModalBody').innerHTML = s.html;
+  document.getElementById('serviceModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeServiceModal() {
+  document.getElementById('serviceModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CABINET MODAL
+═══════════════════════════════════════════════════════════════════════ */
+function openCabinet() {
+  document.getElementById('cabinetModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCabinet() {
+  document.getElementById('cabinetModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CHAT
+═══════════════════════════════════════════════════════════════════════ */
+let chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatBubble').classList.toggle('open', chatOpen);
+  if (chatOpen) document.getElementById('chatInput').focus();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMsg(text, 'user');
+  input.value = '';
+  document.getElementById('chatQuick').style.display = 'none';
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    addMsg(getBotReply(text), 'bot');
+  }, 800 + Math.random() * 600);
+}
+
+function sendQuickMsg(text) {
+  addMsg(text, 'user');
+  document.getElementById('chatQuick').style.display = 'none';
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    addMsg(getBotReply(text), 'bot');
+  }, 700);
+}
+
+function addMsg(text, type) {
+  const el = document.createElement('div');
+  el.className = `msg ${type}`;
+  el.textContent = text;
+  const msgs = document.getElementById('chatMessages');
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const el = document.createElement('div');
+  el.className = 'chat-typing';
+  el.id = 'chatTyping';
+  el.innerHTML = '<span></span><span></span><span></span>';
+  const msgs = document.getElementById('chatMessages');
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  document.getElementById('chatTyping')?.remove();
+}
+
+function getBotReply(text) {
+  const t = text.toLowerCase();
+  const responses = window.__chatResponses || chatResponses;
+  for (const [key, reply] of Object.entries(responses)) {
+    if (t.includes(key)) return reply;
+  }
+  return (getLangPack()?.ui?.chat?.fallback || I18N.ru.ui.chat.fallback);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LANGUAGE SWITCHER / i18n (no API, JSON dictionaries)
+═══════════════════════════════════════════════════════════════════════ */
+const I18N = {
+  ru: {
+    meta: { langName: 'РУС' },
+    toast: { langChanged: 'Язык изменён' },
+    ui: {
+      alertBanner: '⚠️ Срочное оповещение: Изменение режима работы консульства в Москве с 15 апреля. Нажмите для подробностей →',
+      nav: { services: 'Услуги', embassies: 'Посольства', info: 'Гражданам / Мигрантам', cabinet: 'Личный кабинет', news: 'Новости', faq: 'FAQ' },
+      hero: {
+        label: 'Официальный портал',
+        titleHtml: 'Консульские услуги<br><span>Кыргызской Республики</span>',
+        sub: 'Найдите ближайшее посольство, запишитесь онлайн и получите все необходимые документы.',
+        searchPlaceholder: '🔍  Найти посольство или консульство...',
+        searchBtn: 'Найти →',
+        stats: ['Представительств', 'Стран присутствия', 'Экстренная линия', 'Онлайн-виза'],
+      },
+      sections: {
+        services: { label: 'Что мы предлагаем', title: 'Популярные услуги', sub: 'Выберите нужную услугу и узнайте, как её получить' },
+        map: { label: 'Где нас найти', title: 'Посольства и консульства', sub: 'Нажмите на метку на карте или выберите страну из списка' },
+        info: { citizens: '🇰🇬 Гражданам КР за рубежом', foreigners: '🌍 Иностранным гражданам и мигрантам в КР' },
+        faq: { label: 'Частые вопросы', title: 'FAQ', sub: 'Найдите ответ по ключевым словам', placeholder: 'Введите вопрос — например, «паспорт», «виза», «учёт»...' },
+        news: { label: 'Медиа-центр', title: 'Новости и оповещения', sub: 'Официальные сообщения МИД Кыргызской Республики' },
+      },
+      mapApi: { bannerPrefix: '🗝️', bannerTextHtml: 'Введите <a href="https://console.cloud.google.com/apis/library/maps-javascript-api" target="_blank">Google Maps API ключ</a>:', placeholder: 'AIza...', apply: 'Применить' },
+      misc: { taken: 'Занято', nothingFound: 'Ничего не найдено' },
+      cabinet: { title: 'Личный кабинет', sub: 'Запись на приём, загрузка документов и отслеживание статуса заявки' },
+      login: { idPlaceholder: 'ИНН или № паспорта', passPlaceholder: 'Пароль', loginBtn: 'Войти в кабинет', fillAll: 'Заполните все поля', checking: 'Проверка данных...', okDemo: '✅ Вход выполнен успешно (демо)' },
+      feedback: { fillAll: 'Заполните все поля формы', badEmail: 'Введите корректный email', sent: '✅ Ваше сообщение отправлено! Ответим в течение 24 часов.' },
+      chat: {
+        hello: 'Здравствуйте! Я помогу вам найти нужную информацию о консульских услугах. Чем могу помочь? 👋',
+        quick: ['🛂 Паспорт', '🌐 Виза', '📍 Адреса', '🚨 Помощь'],
+        inputPlaceholder: 'Напишите сообщение...',
+        fallback: 'Спасибо за вопрос! По этой теме рекомендую обратиться в ближайшее консульство КР или позвонить на горячую линию: +996 312 66-33-33 (пн–пт, 09:00–18:00). Также можно найти ответ в разделе FAQ.',
+      },
+    },
+    data: {
+      chatResponses: chatResponses,
+      faqData: faqData,
+      serviceDetails: serviceDetails,
+    }
+  },
+  kg: {
+    meta: { langName: 'КЫР' },
+    toast: { langChanged: 'Тил өзгөрдү' },
+    ui: {
+      alertBanner: '⚠️ Шашылыш кабар: Москвадагы консулдуктун иш тартиби 15-апрелден өзгөрөт. Толугураак →',
+      nav: { services: 'Кызматтар', embassies: 'Элчиликтер', info: 'Жарандар / Мигранттар', cabinet: 'Жеке кабинет', news: 'Жаңылыктар', faq: 'FAQ' },
+      hero: {
+        label: 'Расмий портал',
+        titleHtml: 'Консулдук кызматтар<br><span>Кыргыз Республикасынын</span>',
+        sub: 'Эң жакын өкүлчүлүктү табыңыз, онлайн жазылыңыз жана керектүү документтерди алыңыз.',
+        searchPlaceholder: '🔍  Элчилик же консулдук табуу...',
+        searchBtn: 'Издөө →',
+        stats: ['Өкүлчүлүк', 'Өлкө', 'Ыкчам линия', 'Онлайн-виза'],
+      },
+      sections: {
+        services: { label: 'Биз сунуштайбыз', title: 'Популярдуу кызматтар', sub: 'Керектүү кызматты тандап, алуу тартибин билиңиз' },
+        map: { label: 'Кайдан табасыз', title: 'Элчиликтер жана консулдуктар', sub: 'Картадагы белгилөөнү басыңыз же тизмеден өлкөнү тандаңыз' },
+        info: { citizens: '🇰🇬 Чет өлкөдөгү КР жарандарына', foreigners: '🌍 КРдагы чет өлкөлүктөргө жана мигранттарга' },
+        faq: { label: 'Көп берилчү суроолор', title: 'FAQ', sub: 'Ачкыч сөздөр менен жооп табыңыз', placeholder: 'Суроону жазыңыз — мисалы, «паспорт», «виза», «эсеп»...' },
+        news: { label: 'Медиа-борбор', title: 'Жаңылыктар жана билдирүүлөр', sub: 'Кыргыз Республикасынын ТИМинин расмий билдирүүлөрү' },
+      },
+      mapApi: { bannerPrefix: '🗝️', bannerTextHtml: 'Google Maps API <a href="https://console.cloud.google.com/apis/library/maps-javascript-api" target="_blank">ачкычын</a> киргизиңиз:', placeholder: 'AIza...', apply: 'Колдонуу' },
+      misc: { taken: 'Бош эмес', nothingFound: 'Эч нерсе табылган жок' },
+      cabinet: { title: 'Жеке кабинет', sub: 'Кабыл алууга жазылуу, документ жүктөө жана арыздын статусун көзөмөлдөө' },
+      login: { idPlaceholder: 'ЖИН же паспорт №', passPlaceholder: 'Сырсөз', loginBtn: 'Кирүү', fillAll: 'Бардык талааларды толтуруңуз', checking: 'Маалымат текшерилүүдө...', okDemo: '✅ Кирүү ийгиликтүү (демо)' },
+      feedback: { fillAll: 'Форманын бардык талааларын толтуруңуз', badEmail: 'Туура email жазыңыз', sent: '✅ Билдирүү жөнөтүлдү! 24 саат ичинде жооп беребиз.' },
+      chat: {
+        hello: 'Саламатсызбы! Консулдук кызматтар боюнча маалымат табууга жардам берем. Эмне керек? 👋',
+        quick: ['🛂 Паспорт', '🌐 Виза', '📍 Даректер', '🚨 Жардам'],
+        inputPlaceholder: 'Билдирүү жазыңыз...',
+        fallback: 'Сурооңуз үчүн рахмат! Бул тема боюнча жакынкы консулдукка кайрылыңыз же ишеним телефонуна чалыңыз: +996 312 66-33-33 (дш–жм, 09:00–18:00). Жоопту FAQ бөлүмүнөн да таба аласыз.',
+      },
+    },
+    data: { /* заполню ниже в JS (см. applyI18nData) */ }
+  },
+  en: {
+    meta: { langName: 'ENG' },
+    toast: { langChanged: 'Language changed' },
+    ui: {
+      alertBanner: '⚠️ Urgent notice: Changes in Moscow consulate schedule starting April 15. Click for details →',
+      nav: { services: 'Services', embassies: 'Embassies', info: 'Citizens / Migrants', cabinet: 'Personal account', news: 'News', faq: 'FAQ' },
+      hero: {
+        label: 'Official portal',
+        titleHtml: 'Consular services<br><span>of the Kyrgyz Republic</span>',
+        sub: 'Find the nearest embassy, book online, and get all required documents.',
+        searchPlaceholder: '🔍  Find an embassy or consulate...',
+        searchBtn: 'Search →',
+        stats: ['Missions', 'Countries', 'Emergency line', 'E-Visa'],
+      },
+      sections: {
+        services: { label: 'What we offer', title: 'Popular services', sub: 'Choose a service and learn how to obtain it' },
+        map: { label: 'Where to find us', title: 'Embassies & consulates', sub: 'Click a pin on the map or choose a country from the list' },
+        info: { citizens: '🇰🇬 Kyrgyz citizens abroad', foreigners: '🌍 Foreign citizens & migrants in KG' },
+        faq: { label: 'Frequently asked questions', title: 'FAQ', sub: 'Find an answer by keywords', placeholder: 'Type a question — e.g. “passport”, “visa”, “registration”...' },
+        news: { label: 'Media center', title: 'News & notices', sub: 'Official messages of the MFA of the Kyrgyz Republic' },
+      },
+      mapApi: { bannerPrefix: '🗝️', bannerTextHtml: 'Enter your <a href="https://console.cloud.google.com/apis/library/maps-javascript-api" target="_blank">Google Maps API key</a>:', placeholder: 'AIza...', apply: 'Apply' },
+      misc: { taken: 'Taken', nothingFound: 'Nothing found' },
+      cabinet: { title: 'Personal account', sub: 'Appointments, document upload, and application status tracking' },
+      login: { idPlaceholder: 'Tax ID or passport No.', passPlaceholder: 'Password', loginBtn: 'Sign in', fillAll: 'Please fill in all fields', checking: 'Checking...', okDemo: '✅ Signed in successfully (demo)' },
+      feedback: { fillAll: 'Please fill in all form fields', badEmail: 'Please enter a valid email', sent: '✅ Message sent! We will reply within 24 hours.' },
+      chat: {
+        hello: 'Hello! I can help you find information about consular services. How can I help? 👋',
+        quick: ['🛂 Passport', '🌐 Visa', '📍 Addresses', '🚨 Help'],
+        inputPlaceholder: 'Type a message...',
+        fallback: 'Thanks for your question! Please contact the nearest Kyrgyz consulate or call the hotline: +996 312 66-33-33 (Mon–Fri, 09:00–18:00). You can also check the FAQ section.',
+      },
+    },
+    data: { /* заполню ниже в JS (см. applyI18nData) */ }
+  },
+};
+
+let currentLang = 'ru';
+
+function getLangPack() {
+  return I18N[currentLang] || I18N.ru;
+}
+
+function applyI18nStatic() {
+  const p = getLangPack();
+
+  // Alert banner
+  const banner = document.querySelector('.alert-banner');
+  if (banner) banner.innerHTML = `<span class="dot"></span>${p.ui.alertBanner}`;
+
+  // Header nav (desktop & mobile)
+  const navMap = {
+    '#services': p.ui.nav.services,
+    '#embassies': p.ui.nav.embassies,
+    '#info': p.ui.nav.info,
+    '#cabinet': p.ui.nav.cabinet,
+    '#news': p.ui.nav.news,
+    '#faq': p.ui.nav.faq,
+  };
+  document.querySelectorAll('header nav:not(.mobile-nav) a, header nav.mobile-nav a').forEach(a => {
+    const href = a.getAttribute('href');
+    if (href && navMap[href]) a.textContent = navMap[href];
+  });
+
+  // Hero
+  const heroLabel = document.querySelector('.hero .section-label');
+  if (heroLabel) heroLabel.textContent = p.ui.hero.label;
+  const heroTitle = document.querySelector('.hero h1');
+  if (heroTitle) heroTitle.innerHTML = p.ui.hero.titleHtml;
+  const heroSub = document.querySelector('.hero p:not(.section-label)');
+  if (heroSub) heroSub.textContent = p.ui.hero.sub;
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.placeholder = p.ui.hero.searchPlaceholder;
+  const heroSearchBtn = document.querySelector('.hero .search-bar button');
+  if (heroSearchBtn) heroSearchBtn.textContent = p.ui.hero.searchBtn;
+  const statLabels = document.querySelectorAll('.hero-stats .hero-stat span');
+  if (statLabels.length === 4) {
+    statLabels[0].textContent = p.ui.hero.stats[0];
+    statLabels[1].textContent = p.ui.hero.stats[1];
+    statLabels[2].textContent = p.ui.hero.stats[2];
+    statLabels[3].textContent = p.ui.hero.stats[3];
+  }
+
+  // Services section headings
+  const services = document.getElementById('services');
+  if (services) {
+    services.querySelector('.section-label').textContent = p.ui.sections.services.label;
+    services.querySelector('.section-title').textContent = p.ui.sections.services.title;
+    services.querySelector('.section-sub').textContent = p.ui.sections.services.sub;
+  }
+
+  // Map section headings + API banner
+  const emb = document.getElementById('embassies');
+  if (emb) {
+    emb.querySelector('.section-label').textContent = p.ui.sections.map.label;
+    emb.querySelector('.section-title').textContent = p.ui.sections.map.title;
+    emb.querySelector('.section-sub').textContent = p.ui.sections.map.sub;
+  }
+  const apiBanner = document.getElementById('apiBanner');
+  if (apiBanner) {
+    const span = apiBanner.querySelector('span');
+    if (span) span.innerHTML = p.ui.mapApi.bannerTextHtml;
+    const apiInput = document.getElementById('apiKeyInput');
+    if (apiInput) apiInput.placeholder = p.ui.mapApi.placeholder;
+    const apiBtn = apiBanner.querySelector('button');
+    if (apiBtn) apiBtn.textContent = p.ui.mapApi.apply;
+  }
+
+  // Tabs
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  if (tabBtns.length >= 2) {
+    tabBtns[0].textContent = p.ui.sections.info.citizens;
+    tabBtns[1].textContent = p.ui.sections.info.foreigners;
+  }
+
+  // FAQ headings + placeholder
+  const faq = document.getElementById('faq');
+  if (faq) {
+    faq.querySelector('.section-label').textContent = p.ui.sections.faq.label;
+    faq.querySelector('.section-title').textContent = p.ui.sections.faq.title;
+    faq.querySelector('.section-sub').textContent = p.ui.sections.faq.sub;
+  }
+  const faqSearch = document.getElementById('faqSearch');
+  if (faqSearch) faqSearch.placeholder = p.ui.sections.faq.placeholder;
+
+  // News headings
+  const news = document.getElementById('news');
+  if (news) {
+    news.querySelector('.section-label').textContent = p.ui.sections.news.label;
+    news.querySelector('.section-title').textContent = p.ui.sections.news.title;
+    news.querySelector('.section-sub').textContent = p.ui.sections.news.sub;
+  }
+
+  // Cabinet modal title/sub
+  const cabTitle = document.querySelector('#cabinetModal .modal-head h3');
+  if (cabTitle) cabTitle.textContent = p.ui.cabinet.title;
+  const cabSub = document.querySelector('#cabinetModal .modal-body > p');
+  if (cabSub) cabSub.textContent = p.ui.cabinet.sub;
+
+  // Login placeholders/button
+  const loginId = document.getElementById('loginId');
+  if (loginId) loginId.placeholder = p.ui.login.idPlaceholder;
+  const loginPass = document.getElementById('loginPass');
+  if (loginPass) loginPass.placeholder = p.ui.login.passPlaceholder;
+  const loginBtn = document.querySelector('#cabinetModal button.btn-primary[onclick*="doLogin"]');
+  if (loginBtn) loginBtn.textContent = p.ui.login.loginBtn;
+
+  // Chat
+  const hello = document.querySelector('#chatMessages .msg.bot');
+  if (hello) hello.textContent = p.ui.chat.hello;
+  const quickBtns = document.querySelectorAll('#chatQuick button');
+  if (quickBtns.length === 4) {
+    quickBtns[0].textContent = p.ui.chat.quick[0];
+    quickBtns[1].textContent = p.ui.chat.quick[1];
+    quickBtns[2].textContent = p.ui.chat.quick[2];
+    quickBtns[3].textContent = p.ui.chat.quick[3];
+  }
+  const chatInput = document.getElementById('chatInput');
+  if (chatInput) chatInput.placeholder = p.ui.chat.inputPlaceholder;
+}
+
+function applyI18nData() {
+  // Replace datasets used by renderers/chat/service modal based on language.
+  // For demo, we keep RU datasets as default and override in KG/EN if provided.
+  const p = getLangPack();
+  window.__chatResponses = p.data?.chatResponses || chatResponses;
+  window.__faqData = p.data?.faqData || faqData;
+  window.__serviceDetails = p.data?.serviceDetails || serviceDetails;
+}
+
+function setLang(btnOrLang, maybeLang) {
+  const lang = typeof btnOrLang === 'string' ? btnOrLang : maybeLang;
+  if (!I18N[lang]) return;
+
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+
+  // UI: active state
+  document.querySelectorAll('.lang-switcher button').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === I18N[lang].meta.langName);
+  });
+
+  applyI18nData();
+  applyI18nStatic();
+
+  // Rerender dynamic blocks
+  renderFaq(window.__faqData);
+  renderSlots();
+  renderEmbassyList(embassies);
+
+  showToast(`${getLangPack().toast.langChanged}: ${I18N[lang].meta.langName}`, 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE MENU
+═══════════════════════════════════════════════════════════════════════ */
+function toggleMobileMenu() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════════════════════ */
+function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!id || !pass) { showToast('Заполните все поля', 'error'); return; }
+  showToast('Проверка данных...', 'success');
+  setTimeout(() => showToast('✅ Вход выполнен успешно (демо)', 'success'), 1200);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FEEDBACK FORM
+═══════════════════════════════════════════════════════════════════════ */
+function submitFeedback() {
+  const name = document.getElementById('fbName').value.trim();
+  const email = document.getElementById('fbEmail').value.trim();
+  const msg = document.getElementById('fbMsg').value.trim();
+  if (!name || !email || !msg) { showToast('Заполните все поля формы', 'error'); return; }
+  if (!email.includes('@')) { showToast('Введите корректный email', 'error'); return; }
+  showToast('✅ Ваше сообщение отправлено! Ответим в течение 24 часов.', 'success');
+  document.getElementById('fbName').value = '';
+  document.getElementById('fbEmail').value = '';
+  document.getElementById('fbMsg').value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SCROLL-SPY (nav active link)
+═══════════════════════════════════════════════════════════════════════ */
+function updateActiveNav() {
+  const sections = ['services', 'embassies', 'info', 'faq', 'news'];
+  const links = document.querySelectorAll('nav:not(.mobile-nav) a');
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 120) current = id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DRAG & DROP for upload zone
+═══════════════════════════════════════════════════════════════════════ */
+function initDragDrop() {
+  const zone = document.querySelector('.upload-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--gold2)'; });
+  zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.style.borderColor = '';
+    handleFiles(e.dataTransfer.files);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Load Google Maps (from saved key or window.GMAPS_KEY)
+  const savedKey = localStorage.getItem('gmaps_key');
+  const pageKey = (window.GMAPS_KEY && window.GMAPS_KEY !== 'YOUR_API_KEY') ? window.GMAPS_KEY : '';
+  const keyToUse = savedKey || pageKey;
+
+  if (keyToUse) {
+    document.getElementById('apiKeyInput').value = keyToUse;
+    document.getElementById('apiBanner').style.display = 'none';
+    document.getElementById('map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:14px">⏳ Загрузка карты...</div>';
+    loadGoogleMaps(keyToUse).catch(() => {
+      document.getElementById('apiBanner').style.display = 'flex';
+      renderEmbassyList(embassies);
+    });
+  } else {
+    // Show fallback embassy list even without map
+    renderEmbassyList(embassies);
+  }
+  applyI18nData();
+  const savedLang = localStorage.getItem('lang');
+  if (savedLang && I18N[savedLang]) currentLang = savedLang;
+  applyI18nStatic();
+  renderFaq(window.__faqData || faqData);
+  renderNews(newsData);
+  renderSlots();
+  initDragDrop();
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+  // Keyboard: Escape closes modals
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeEmergency();
+      closeServiceModal();
+      closeCabinet();
+      if (chatOpen) toggleChat();
+    }
+  });
+
+  // #cabinet links should open modal (not scroll)
+  document.addEventListener('click', e => {
+    const a = e.target.closest?.('a[href="#cabinet"]');
+    if (!a) return;
+    e.preventDefault();
+    openCabinet();
+  });
+});
+</script>
+</body>
+</html>
